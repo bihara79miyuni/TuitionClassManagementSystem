@@ -1,0 +1,130 @@
+CREATE DATABASE IF NOT EXISTS tuition_ms2
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE tuition_ms2;
+
+-- =========================
+-- STUDENT
+-- =========================
+CREATE TABLE student (
+  student_id INT AUTO_INCREMENT PRIMARY KEY,
+  full_name VARCHAR(120) NOT NULL,
+  phone VARCHAR(20),
+  email VARCHAR(120),
+  address VARCHAR(255),
+  registered_date DATE NOT NULL DEFAULT (CURRENT_DATE),
+  status VARCHAR(30) NOT NULL DEFAULT 'ACTIVE',
+  username VARCHAR(60) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  UNIQUE KEY uq_student_email (email)
+);
+
+-- =========================
+-- TEACHER
+-- =========================
+CREATE TABLE teacher (
+  teacher_id INT AUTO_INCREMENT PRIMARY KEY,
+  full_name VARCHAR(120) NOT NULL,
+  phone VARCHAR(20),
+  email VARCHAR(120),
+  subject VARCHAR(80),
+  username VARCHAR(60) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  UNIQUE KEY uq_teacher_email (email)
+);
+
+-- =========================
+-- CLASS
+-- =========================
+CREATE TABLE class (
+  class_id INT AUTO_INCREMENT PRIMARY KEY,
+  class_name VARCHAR(120) NOT NULL,
+  subject VARCHAR(80),
+  grade VARCHAR(30),
+  schedule_day VARCHAR(20),
+  schedule_time VARCHAR(50),
+  monthly_fee DECIMAL(10,2) NOT NULL DEFAULT 0,
+  teacher_id INT NOT NULL,
+  FOREIGN KEY (teacher_id) REFERENCES teacher(teacher_id)
+    ON UPDATE CASCADE ON DELETE RESTRICT
+);
+
+CREATE INDEX idx_class_teacher ON class(teacher_id);
+
+-- =========================
+-- ENROLLMENT (Student - Class)
+-- =========================
+CREATE TABLE enrollment (
+  enrollment_id INT AUTO_INCREMENT PRIMARY KEY,
+  student_id INT NOT NULL,
+  class_id INT NOT NULL,
+  enrolled_date DATE NOT NULL DEFAULT (CURRENT_DATE),
+  enroll_status VARCHAR(30) NOT NULL DEFAULT 'ACTIVE',
+  FOREIGN KEY (student_id) REFERENCES student(student_id)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (class_id) REFERENCES class(class_id)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  UNIQUE KEY uq_student_class (student_id, class_id)
+);
+
+CREATE INDEX idx_enroll_student ON enrollment(student_id);
+CREATE INDEX idx_enroll_class ON enrollment(class_id);
+
+-- =========================
+-- ATTENDANCE_SESSION
+-- =========================
+CREATE TABLE attendance_session (
+  session_id INT AUTO_INCREMENT PRIMARY KEY,
+  class_id INT NOT NULL,
+  session_date DATE NOT NULL,
+  start_time VARCHAR(20),
+  end_time VARCHAR(20),
+  FOREIGN KEY (class_id) REFERENCES class(class_id)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  UNIQUE KEY uq_class_date (class_id, session_date)
+);
+
+CREATE INDEX idx_session_class ON attendance_session(class_id);
+
+-- =========================
+-- ATTENDANCE
+-- =========================
+CREATE TABLE attendance (
+  attendance_id INT AUTO_INCREMENT PRIMARY KEY,
+  session_id INT NOT NULL,
+  student_id INT NOT NULL,
+  status ENUM('PRESENT','ABSENT') NOT NULL,
+  note VARCHAR(255),
+  FOREIGN KEY (session_id) REFERENCES attendance_session(session_id)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (student_id) REFERENCES student(student_id)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  UNIQUE KEY uq_session_student (session_id, student_id)
+);
+
+CREATE INDEX idx_att_student ON attendance(student_id);
+CREATE INDEX idx_att_session ON attendance(session_id);
+
+-- =========================
+-- PAYMENT
+-- =========================
+CREATE TABLE payment (
+  payment_id INT AUTO_INCREMENT PRIMARY KEY,
+  student_id INT NOT NULL,
+  class_id INT NOT NULL,
+  month VARCHAR(7) NOT NULL,               -- e.g., 2026-02
+  amount DECIMAL(10,2) NOT NULL,
+  paid_date DATE NULL,
+  method ENUM('CASH','CARD','ONLINE') NOT NULL DEFAULT 'CASH',
+  pay_status ENUM('PAID','PENDING') NOT NULL DEFAULT 'PENDING',
+  receipt_no VARCHAR(50),
+  FOREIGN KEY (student_id) REFERENCES student(student_id)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (class_id) REFERENCES class(class_id)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  UNIQUE KEY uq_student_class_month (student_id, class_id, month),
+  UNIQUE KEY uq_receipt (receipt_no)
+);
+
+CREATE INDEX idx_payment_student ON payment(student_id);
+CREATE INDEX idx_payment_class ON payment(class_id);
+CREATE INDEX idx_payment_month ON payment(month);

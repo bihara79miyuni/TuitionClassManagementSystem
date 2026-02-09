@@ -1,0 +1,32 @@
+:root{
+  --soft:#f5f7fb;
+  --card:#ffffff;
+}
+
+body.bg-soft{ background: var(--soft); }
+
+.rounded-4{ border-radius: 1rem !important; }
+
+.bg-hero{
+  background: linear-gradient(135deg, #111827, #4f46e5);
+}
+
+.action-btn{
+  border-radius: 999px !important;
+  padding: .35rem .6rem;
+}
+
+.stat .display-6{ line-height: 1.1; }
+
+.table thead th{ white-space: nowrap; }
+
+.card{ background: var(--card); }
+
+.page-title{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+  gap:.75rem;
+  margin-bottom:1rem;
+}
