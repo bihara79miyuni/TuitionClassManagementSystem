@@ -2,7 +2,7 @@
 ## Waterfall SDLC Group Assignment
 
 ### Group Members
-- Miuni Bihara – 23FIS0640
+- Miyuni Bihara – 23FIS0640
 - Hansani Naotunna – 23FIS0639
 - Yasith Kalpana – 23FIS0627
 
