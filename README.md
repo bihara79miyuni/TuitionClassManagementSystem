@@ -2,9 +2,9 @@
 ## Waterfall SDLC Group Assignment
 
 ### Group Members
-- Student 1 – 23fis0640
-- Student 2 – 23fis0639
-- Student 3 – 23fis0627
+- Miuni Bihara – 23fis0640
+- Hansani Naotunna – 23fis0639
+- Yasith Kalpana – 23fis0627
 
 ### System Description
 This system is developed as part of an in-class group assignment to experience
