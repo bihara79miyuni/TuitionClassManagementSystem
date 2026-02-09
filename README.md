@@ -2,9 +2,9 @@
 ## Waterfall SDLC Group Assignment
 
 ### Group Members
-- Miuni Bihara – 23fis0640
-- Hansani Naotunna – 23fis0639
-- Yasith Kalpana – 23fis0627
+- Miuni Bihara – 23FIS0640
+- Hansani Naotunna – 23FIS0639
+- Yasith Kalpana – 23FIS0627
 
 ### System Description
 This system is developed as part of an in-class group assignment to experience
@@ -20,3 +20,8 @@ Tuition Class Management System
 4. Change Request
 5. Implementation
 6. Testing
+
+In our documentation you can get clear idea about our preposed system and steps of choosen SDLC.
+
+
+
